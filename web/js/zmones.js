@@ -20,6 +20,20 @@ const zmones = [
         pavarde: "Antanaitis",
         gimimoData: new Date(1940, 11, 11),
         alga: 438.51
+    },
+    {
+        id: 4,
+        vardas: "Ona",
+        pavarde: "Oniene",
+        gimimoData: new Date(1994, 06, 30),
+        alga: 900.00
+    },
+    {
+        id: 5,
+        vardas: "Janina",
+        pavarde: "Janaite",
+        gimimoData: new Date(1987, 12, 13),
+        alga: 1300.50
     }
 ];
 
@@ -58,7 +72,7 @@ function addZmogus(zmogus) {
     if (typeof zmogus.alga !== "number") {
         return;
     }
-    zmogus = Object.apply({}, zmogus, { id: nextId++ });
+    zmogus = Object.assign({}, zmogus, {id: nextId++});
     if (typeof zmogus.gimimoData === "string") {
         zmogus.gimimoData = new Date(zmogus.gimimoData);
     }
@@ -66,15 +80,12 @@ function addZmogus(zmogus) {
 }
 
 function deleteZmogus(id) {
-    const index = zmones.find(z => z.id === id);
+    const index = zmones.findIndex(z => z.id === id);
     if (index >= 0) {
         zmones.splice(index, 1);
     }
 }
 
 function getZmogus(id) {
-    const index = zmones.find(z => z.id === id);
-    if (index >= 0) {
-        return zmones[index];
-    }
+    return zmones.find(z => z.id === id);
 }
