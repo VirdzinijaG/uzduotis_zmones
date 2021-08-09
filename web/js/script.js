@@ -1,5 +1,5 @@
-function parodytiZmones() {
-    const list = getZmones();
+async function parodytiZmones() {
+    const list = await getZmones();
     const div = document.getElementById("sarasas");
     clearNode(div);
     const listEl = document.createElement("ul");
@@ -33,9 +33,9 @@ function parodytiZmones() {
     div.append(listEl);
 }
 
-function showZmogusForma(event) {
+async function showZmogusForma(event) {
     const id = event.target.attributes.zmogusId;
-    const zmogus = getZmogus(id);
+    const zmogus = await getZmogus(id);
     if (!zmogus) {
         parodytiZmones();
         return;
@@ -113,19 +113,19 @@ function addZmogusForma() {
     div.append(cancelButton);
 }
 
-function saveZmogus() {
-     const vardas = document.getElementById("vardas").value;
-     const pavarde = document.getElementById("pavarde").value;
-     const gimimoData = document.getElementById("gimimoData").value;
-     const alga = document.getElementById("alga").value;
-     const naujasZmogus = {
-         vardas,
-         pavarde,
-         gimimoData,
-         alga: parseFloat(alga)
-     };
-     addZmogus(naujasZmogus);
-     parodytiZmones();
+async function saveZmogus() {
+    const vardas = document.getElementById("vardas").value;
+    const pavarde = document.getElementById("pavarde").value;
+    const gimimoData = document.getElementById("gimimoData").value;
+    const alga = document.getElementById("alga").value;
+    const naujasZmogus = {
+        vardas,
+        pavarde,
+        gimimoData,
+        alga: parseFloat(alga)
+    };
+    await addZmogus(naujasZmogus);
+    parodytiZmones();
 }
 
 function clearNode(node) {
@@ -134,8 +134,8 @@ function clearNode(node) {
     }
 }
 
-function removeZmogusClick(event) {
+async function removeZmogusClick(event) {
     const id = event.target.attributes.zmogusId;
-    deleteZmogus(id);
-    parodytiZmones();
+    await deleteZmogus(id);
+    await parodytiZmones();
 }
