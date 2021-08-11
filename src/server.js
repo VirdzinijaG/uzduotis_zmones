@@ -1,6 +1,7 @@
 
 import { default as express } from "express"; // require eiluite pakeista i import 
 import { readFile, writeFile } from "fs/promises";
+import Handlebars from "handlebars";
 
 const app = express(); // paleidziama funkcija is node_modules
 const port = 3000;
@@ -20,7 +21,7 @@ app.get("/zmones", async (req, res) => { // kreipiamasi i /zmones, vykdoma apras
     }
 });
 app.post("/zmones/add", async (req, res) => { // jei rasoma i /zmones/add
-    const zmogus = req.body; 
+    const zmogus = req.body;
     res.type("application/json");
     try {
         const fZmones = await readFile("zmones.json", { // perskaito faila
@@ -82,6 +83,25 @@ app.get("/zmones/:id", async (req, res) => {
 
 app.get('/labas', (req, res) => {
     res.send('Labas') // israsoma narsykleje 
+});
+
+
+app.get("/h/zmones", async (req, res) => {
+    res.type("text/html");
+    try {
+        const html = await readFile("./view/zmones.handlebars", {
+            encoding: "utf-8"
+        });
+        const fZmones = await readFile("zmones.json", {
+            encoding: "utf-8"
+        });
+        const zmones = JSON.parse(fZmones);
+        const template = Handlebars.compile(html);
+        res.send(template({zmones}));
+    }
+    catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 app.listen(port, () => {
