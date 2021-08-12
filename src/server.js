@@ -1,9 +1,11 @@
 
 import { default as express } from "express"; // require eiluite pakeista i import 
 import { readFile, writeFile } from "fs/promises";
-import Handlebars from "handlebars";
+import exphbs from "express-handlebars";
 
 const app = express(); // paleidziama funkcija is node_modules
+app.engine("handlebars", exphbs());
+app.set("view engine", "handlebars");
 const port = 3000;
 
 app.use(express.static("web")); // tikrina ar web direktorijoje yra failai, pats automatiskai perskaito
@@ -13,7 +15,7 @@ app.get("/zmones", async (req, res) => { // kreipiamasi i /zmones, vykdoma apras
     res.type("application/json");
     try {
         const fZmones = await readFile("zmones.json", { // perskaito zmones.json faila ir nusiuncia atgal
-            encoding: "utf8"
+            encoding: "utf8",
         });
         res.send(fZmones);
     } catch (err) {
@@ -89,17 +91,36 @@ app.get('/labas', (req, res) => {
 app.get("/h/zmones", async (req, res) => {
     res.type("text/html");
     try {
-        const html = await readFile("./view/zmones.handlebars", {
-            encoding: "utf-8"
-        });
+        // const html = await readFile("./view/zmones.handlebars", {
+        //     encoding: "utf8"
+        // });
         const fZmones = await readFile("zmones.json", {
-            encoding: "utf-8"
+            encoding: "utf8",
         });
         const zmones = JSON.parse(fZmones);
-        const template = Handlebars.compile(html);
-        res.send(template({zmones}));
+        // const template = Handlebars.compile(html);
+        // res.send(template({zmones}));
+        res.render("zmones", { zmones });
     }
     catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+app.get("/vienas/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    res.type("text/html");
+    try {
+        const fZmones = await readFile("zmones.json", {
+            encoding: "utf8",
+        });
+        const zmones = JSON.parse(fZmones);
+        let zmogus = zmones.find(z => z.id === id);
+        if (!zmogus) {
+            zmogus = {};
+        }
+        res.render("zmogus", zmogus);
+    } catch (err) {
         res.status(500).send(err);
     }
 });
